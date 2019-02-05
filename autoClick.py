@@ -1,8 +1,9 @@
 import numpy as np
 from PIL import ImageGrab
 import cv2
-from directKeys import click, holdClick, releaseClick, queryMousePosition, W, moveMouseTo
+from directKeys import click, holdClick, holdClickV2, releaseClick, queryMousePosition, W, moveMouseTo
 import time
+import keyboard
 
 
 # debug method to show the whole screen
@@ -32,15 +33,6 @@ def readBlack(Screen, Coordinates):
             # moveMouseTo(x + round(Coordinates[0]), y + round(Coordinates[1]))
             # time.sleep(0.001)
 
-# Clicks the first black pixel it finds
-def clickBlack(Screen, Coordinates, Column):
-    for y in reversed(range(len(Screen))):
-        for x in range(len(Screen[y])):
-            if Screen[y][x] < 45:
-                releaseClick()
-                holdClick(x + round(Coordinates[0]), y + round(Coordinates[1]))
-                return
-
 # trims columns to read just bits of the columns instead of the whole screen, boosting efficiency
 def trimColums(coords):
     standardColumnLength = 1
@@ -52,144 +44,95 @@ def trimColums(coords):
     coords[2] = x2
     return coords
 
-# reads the screen and gets all the locations of the black blocks and sorts them from lower(in the screen) to highest
-def getLowestBlack(counter):
-    highestPixel = 10000
-    prevhighestPixel = 10000
-    sortedBlacks = []
-    indexBlacks = []
-    columnBlacks = []
-    finalOrder = []
 
-    for i in list(range(4))[::+1]:
-        x1 = gameCoords[0] + gameColumns[i][0]
-        y1 = gameCoords[1]
-        x2 = x1 + blockLength
-        y2 = gameCoords[3]
-        coordinates = [x1, y1, x2, y2]
-        coordinates = trimColums(coordinates)
-        screen = np.array(ImageGrab.grab(bbox=coordinates))
-        screen = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
-        # cv2.imshow('screen', screen)
-        # cv2.waitKey(0)
-        # cv2.destroyAllWindows()
-        # readBlack(screen, coordinates)
-        prevhighestPixel = highestPixel
-        blocks = getHighestPixel(screen, coordinates)
+# Reads the column from bottom to top until it finds the first black pixel and clicks it
+def clickBlock(X, Column):
 
-        # if blocks.__len__() > 2:
-        #     cv2.imwrite(str(i) + "_column" + str(i) + ".jpg",
-        #                 cv2.cvtColor(np.array(ImageGrab.grab(bbox=gameCoords)), cv2.COLOR_BGR2GRAY))
+    x1 = gameCoords[0] + gameColumns[Column][0]
+    y1 = gameCoords[1]
+    x2 = x1 + blockLength
+    y2 = gameCoords[3]
+    coordinates = [x1, y1, x2, y2]
+    coordinates = trimColums(coordinates)
+    screen = np.array(ImageGrab.grab(bbox=coordinates))
+    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
 
-        for index in range(len(blocks)):
-            sortedBlacks.append(blocks[index])
-            columnBlacks.append(i)
-            indexBlacks.append(blocks[index])
-            print("columns: " + str(i + 1) + " prevhighestPixel: " + str(prevhighestPixel) + " highestPixel: " + str(
-                blocks[index]))
+    # cv2.imwrite("testImages/column" + str(X) + ".jpg", screen)
 
-    sortedBlacks.sort(reverse=True)
+    for y in reversed(range(len(screen))):
+        if screen[y][0] < blackIdentifier:
+            releaseClick()
+            holdClickV2()
+            # time.sleep(1)
+            return
+        moveMouseTo(X, y + round(coordinates[1]))
+        # time.sleep(0.1)
 
-    for i in range(len(sortedBlacks)):
-        if sortedBlacks[i] != 10000:
-            finalOrder.append(columnBlacks[indexBlacks.index(sortedBlacks[i])])
-        else:
-            finalOrder.append(-1)
+# Method that verifies if we should click the block and if so, it triggers the click method
+def shouldClick(Screen, X, Column, counter):
+    print("checkscreen")
+    for i in range(lineHeight):
+        print("value:" + str(Screen[i][X]))
+        if Screen[i][X] < blackIdentifier:
+            if counter == 0:
+                pressStart()
+            clickBlock(X + gameCoords[0], Column)
+            # moveMouseTo(X + gameCoords[0], lineCoords[1])
+            # time.sleep(0.001)
+            return True
+    # moveMouseTo(X + gameCoords[0], lineCoords[1])
+    # time.sleep(0.001)
+    return False
 
-    finalOrder = cleanOrder(finalOrder)
-
-    return finalOrder
-
-# The game can have two black blocks on the same column so we want to remove the second block from our ordered list
-def cleanOrder(columns):
-    prevColumn = -1
-    currentColumn = -1
-    popCount = 0
-    for i in range(len(columns)):
-        i = i - popCount
-        currentColumn = columns[i]
-        if currentColumn == prevColumn:
-            columns.pop(i)
-            popCount += 1
-        else:
-            prevColumn = currentColumn
-    return columns
+# Method to gradually increase the height in which we are looking for black pixels 
+def increaseHeightOffset():
+    global heightOffset
+    global lineCoords
+    heightOffsetLimit = gameCoords[3]
+    print("heightOffsetLimit: " + str(heightOffsetLimit))
+    if heightOffset < heightOffsetLimit:
+        heightOffset += 1
+        lineCoords = [gameCoords[0], gameCoords[3] - heightOffset - lineHeight, gameCoords[2],
+                      (gameCoords[3] - heightOffset)]
+        print("heightOffset:" + str(heightOffset))
 
 
-# gets the highest black pixel(block) in each column
-def getHighestPixel(Screen, Coordinates):
-    blocks = []
-    highestPixel = 10000
-    lastHigh = 10000
-    currHigh = 10000
-    switch = True
-    prevHighestPixel = -10000
+# Method that reads the line with it's corresponding coordinates
+def readLine(counter):
 
-    for y in range(len(Screen)):
-        for x in range(len(Screen[y])):
-            if Screen[y][x] < 45:
+    screen = np.array(ImageGrab.grab(bbox=lineCoords))
+    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
 
-                if not switch:
-                    break
+    global lastBlockClicked
 
-                # moveMouseTo(x + round(Coordinates[0]), y + round(Coordinates[1]))
-                # time.sleep(1)
-                highestPixel = y + round(Coordinates[1])
-
-                if switch:
-
-                    if highestPixel > (prevHighestPixel + blockHeight):
-                        blocks.append(highestPixel)
-                        switch = False
-                        prevHighestPixel = highestPixel
+    print("===================================ITERATION:" + str(counter) +  "===================================")
+    for i in range(len(gameBlocks)):
+        if lastBlockClicked != i:
+            if shouldClick(screen, gameBlocks[i], i, counter):
+                lastBlockClicked = i
+                print("block " + str(i) + " shouldClick: TRUE")
             else:
-                # print(Screen[y][x])
-                switch = True
+                # increaseHeightOffset()
+                print("block " + str(i) + " shouldClick: FALSE")
+        else:
+            # increaseHeightOffset()
+            print("block " + str(i) + " shouldClick: FALSE")
 
-        # moveMouseTo(x + round(Coordinates[0]), y + round(Coordinates[1]))
-        # time.sleep(0.001)
-    return blocks
+    return False
 
-
-def processColumns(counter):
-    columns = getLowestBlack(counter)
-    print("sortedColumns: " + str(columns))
-
-    if columns.__len__() > 7:
-        print("------------------------------------STOP PROGRAM-------------------------------------")
+# Kill switch to end the program
+def isKillSwitch():
+    if keyboard.is_pressed('k'):  # if key 'esc' is pressed
+        print('*****************************************KILL SWITCH*****************************************')
         return True
 
-    for i in range(len(columns)):
-
-        if columns[i] == -1:
-            print("Skip Column: " + str(columns[i]))
-            continue
-        else:
-            print("Reading Column: " + str(columns[i]))
-
-        x1 = gameCoords[0] + gameColumns[columns[i]][0]
-        y1 = gameCoords[1]
-        x2 = x1 + blockLength
-        y2 = gameCoords[3]
-        coordinates = [x1, y1, x2, y2]
-        coordinates = trimColums(coordinates)
-        # print(coordinates)
-        screen = np.array(ImageGrab.grab(bbox=coordinates))
-        screen = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
-        # cv2.imwrite(str(counter) + "_column" + str(i) + "_screen.jpg", screen)
-        # cv2.imwrite(str(counter) + "_column" + str(i) + ".jpg", cv2.cvtColor(np.array(ImageGrab.grab(bbox=gameCoords)), cv2.COLOR_BGR2GRAY))
-        # cv2.imshow('screen', screen)
-        # cv2.waitKey(0)
-        # cv2.destroyAllWindows()
-        # readBlack(screen, coordinates)
-        clickBlack(screen, coordinates, columns[i])
-
-
-def Start():
-    #The mouse cursor should be hovering over the game's start button.
+# Method that presses the start button
+def pressStart():
     mousePos = queryMousePosition()
     click(mousePos.get("x"), mousePos.get("y"))
-    time.sleep(0.1)
+    # time.sleep(0.1)
+
+def Start():
 
     start = time.time()
     time.clock()
@@ -197,29 +140,46 @@ def Start():
     elapsed = 0
     stopProgram = False
     counter = 0
-    while elapsed < 600:
 
-        stopProgram = processColumns(counter)
+    while elapsed < 40:
+
+        if isKillSwitch():
+            break
+
+        stopProgram = readLine(counter)
 
         if stopProgram:
             break
 
         counter += 1
         elapsed = time.time() - start
-        print("loop cycle time: %f, seconds count: %02d" % (time.clock(), elapsed))
+        # print("loop cycle time: %f, seconds count: %02d" % (time.clock(), elapsed))
 
+
+# Black value identifier when searching for black pixels
+blackIdentifier = 45
+
+# Height offset in which we will read black pixels
+heightOffset = 500
+
+# Number of pixels in height we will read to search for black pixels
+lineHeight = 20
 
 # Coordinates used for OpenCV to analyze screen
 gameCoords = [663, 42, 1260, 1025]
+
+# Coordinates of the line we're gonna search black pixels in
+lineCoords = [gameCoords[0], gameCoords[3] - heightOffset - lineHeight, gameCoords[2], (gameCoords[3] - heightOffset)]
 print(gameCoords)
+print(lineCoords)
 gameLength = gameCoords[2] - gameCoords[0]
 gameHeight = gameCoords[3] - gameCoords[1]
 
 # Each black block 
-blockLength = gameLength/4
-blockHeight = gameHeight/4
+blockLength = round(gameLength/4)
+blockHeight = round(gameHeight/4)
 
-# Columns corresponding to each block
+# Coordinates of the Columns corresponding to each block
 column1 = [0, blockLength]
 column2 = [column1[1], blockLength*2]
 column3 = [column2[1], blockLength*3]
@@ -227,6 +187,18 @@ column4 = [column3[1], blockLength*4]
 
 gameColumns = [column1, column2, column3, column4]
 print(gameColumns)
+
+# X coordinates for each block location
+block1 = round(blockLength/4)
+block2 = block1 + blockLength
+block3 = block2 + blockLength
+block4 = block3 + blockLength
+
+gameBlocks = [block1, block2, block3, block4]
+print(gameBlocks)
+
+# Variable to optimize search times by skipping the columns if it has been already read
+lastBlockClicked = -1
 
 Start()
 # showScreen()
