@@ -12,6 +12,8 @@ Python App that Plays Piano Tiles
 ## Installation
 
 * Clone the repository.
+* Install the requirements: 
+    ```pip install -r requirements.txt```
 * Install **Piano Tiles 2018: Classic Songs** from the windows store
 * Before running the project you need to change the **High DPI Settings** used by Python.
     * Go to your Python installation folder and modify the High DPI Settings.
@@ -21,6 +23,7 @@ Python App that Plays Piano Tiles
 ## Usage
 
 * Open tha game(full screen).
+* Open the autoClick.py file.
 * Change the game coordinates to match your screen.
 * Choose a song.
 * Hover mouse on top of the start button.
