@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="c337e560-2452-4512-b4bc-3c03c8de6987" name="Default Changelist" comment="" />
+    <list default="true" id="c337e560-2452-4512-b4bc-3c03c8de6987" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/autoClick.py" beforeDir="false" afterPath="$PROJECT_DIR$/autoClick.py" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -10,68 +14,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/main">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1105">
-              <caret line="65" selection-start-line="65" selection-end-line="65" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/autoClick">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1632">
-              <caret line="100" column="25" selection-start-line="100" selection-start-column="25" selection-end-line="100" selection-end-column="25" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/optimizedAutoClick">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4012">
-              <caret line="240" column="18" selection-start-line="234" selection-end-line="240" selection-end-column="18" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/optimizedAutoClickV2.0">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="5236">
-              <caret line="313" column="17" selection-start-line="313" selection-start-column="17" selection-end-line="313" selection-end-column="17" />
-              <folding>
-                <element signature="e#0#18#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/optimizedAutoClickV2.5.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="113">
-              <caret line="276" column="20" lean-forward="true" selection-start-line="276" selection-start-column="20" selection-end-line="276" selection-end-column="20" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/directKeys.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1683">
-              <caret line="101" column="15" selection-start-line="101" selection-start-column="4" selection-end-line="101" selection-end-column="15" />
+            <state relative-caret-position="267">
+              <caret line="59" column="25" selection-start-line="59" selection-start-column="25" selection-end-line="59" selection-end-column="25" />
               <folding>
                 <element signature="e#216#229#0" expanded="true" />
               </folding>
@@ -79,23 +26,14 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/trackBlackColor">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/autoClick.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="221">
-              <caret line="15" selection-start-line="15" selection-end-line="15" />
+            <state relative-caret-position="215">
+              <caret line="173" column="19" lean-forward="true" selection-start-line="173" selection-start-column="19" selection-end-line="173" selection-end-column="19" />
               <folding>
                 <element signature="e#0#18#0" expanded="true" />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/readImg">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="493">
-              <caret line="33" selection-start-line="33" selection-end-line="33" />
             </state>
           </provider>
         </entry>
@@ -138,6 +76,9 @@
       <replace>&lt; 45</replace>
     </replaceStrings>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
@@ -151,6 +92,7 @@
         <option value="$PROJECT_DIR$/optimizedAutoClickV1.0" />
         <option value="$PROJECT_DIR$/optimizedAutoClickV2.5.py" />
         <option value="$PROJECT_DIR$/main" />
+        <option value="$PROJECT_DIR$/autoClick.py" />
       </list>
     </option>
   </component>
@@ -170,26 +112,8 @@
         <subPane>
           <expand>
             <path>
-              <item name="autoPianoTiles" type="b2602c69:ProjectViewProjectNode" />
-              <item name="autoPianoTiles" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="autoPianoTiles" type="b2602c69:ProjectViewProjectNode" />
-              <item name="autoPianoTiles" type="462c0819:PsiDirectoryNode" />
-              <item name="venv" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="autoPianoTiles" type="b2602c69:ProjectViewProjectNode" />
-              <item name="autoPianoTiles" type="462c0819:PsiDirectoryNode" />
-              <item name="venv" type="462c0819:PsiDirectoryNode" />
-              <item name="Lib" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="autoPianoTiles" type="b2602c69:ProjectViewProjectNode" />
-              <item name="autoPianoTiles" type="462c0819:PsiDirectoryNode" />
-              <item name="venv" type="462c0819:PsiDirectoryNode" />
-              <item name="Lib" type="462c0819:PsiDirectoryNode" />
-              <item name="site-packages" type="462c0819:PsiDirectoryNode" />
+              <item name="Python_Plays_Piano_Tiles" type="b2602c69:ProjectViewProjectNode" />
+              <item name="Python_Plays_Piano_Tiles" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
@@ -198,6 +122,7 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RecentsManager">
@@ -357,13 +282,14 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="1073" width="1550" height="838" extended-state="6" />
+    <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24917382" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24917382" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.16997167" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.16997167" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.398017" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -428,60 +354,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/autoClick">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1632">
-          <caret line="100" column="25" selection-start-line="100" selection-start-column="25" selection-end-line="100" selection-end-column="25" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/optimizedAutoClick">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4012">
-          <caret line="240" column="18" selection-start-line="234" selection-end-line="240" selection-end-column="18" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/optimizedAutoClickV2.0">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="5236">
-          <caret line="313" column="17" selection-start-line="313" selection-start-column="17" selection-end-line="313" selection-end-column="17" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/autoClick" />
+    <entry file="file://$PROJECT_DIR$/optimizedAutoClick" />
+    <entry file="file://$PROJECT_DIR$/optimizedAutoClickV2.0" />
+    <entry file="file://$PROJECT_DIR$/trackBlackColor" />
+    <entry file="file://$PROJECT_DIR$/readImg" />
+    <entry file="file://$PROJECT_DIR$/optimizedAutoClickV2.5.py" />
+    <entry file="file://$PROJECT_DIR$/main" />
     <entry file="file://$PROJECT_DIR$/directKeys.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1683">
-          <caret line="101" column="15" selection-start-line="101" selection-start-column="4" selection-end-line="101" selection-end-column="15" />
+        <state relative-caret-position="267">
+          <caret line="59" column="25" selection-start-line="59" selection-start-column="25" selection-end-line="59" selection-end-column="25" />
           <folding>
             <element signature="e#216#229#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/trackBlackColor">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="221">
-          <caret line="15" selection-start-line="15" selection-end-line="15" />
-          <folding>
-            <element signature="e#0#18#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/readImg">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="493">
-          <caret line="33" selection-start-line="33" selection-end-line="33" />
         </state>
       </provider>
     </entry>
@@ -492,17 +378,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/optimizedAutoClickV2.5.py">
+    <entry file="file://$PROJECT_DIR$/autoClick.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="113">
-          <caret line="276" column="20" lean-forward="true" selection-start-line="276" selection-start-column="20" selection-end-line="276" selection-end-column="20" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/main">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1105">
-          <caret line="65" selection-start-line="65" selection-end-line="65" />
+        <state relative-caret-position="215">
+          <caret line="173" column="19" lean-forward="true" selection-start-line="173" selection-start-column="19" selection-end-line="173" selection-end-column="19" />
           <folding>
             <element signature="e#0#18#0" expanded="true" />
           </folding>

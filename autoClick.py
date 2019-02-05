@@ -14,6 +14,7 @@ def showScreen():
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
+
 # debug method to show screen
 def showScreenWithCoordinates(coordinates):
     screen = np.array(ImageGrab.grab(bbox=coordinates))
@@ -21,6 +22,7 @@ def showScreenWithCoordinates(coordinates):
     cv2.imshow('screen', screen)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
+
 
 # debug method to read black blocks
 def readBlack(Screen, Coordinates):
@@ -32,6 +34,7 @@ def readBlack(Screen, Coordinates):
             # print(Screen[y][x])
             # moveMouseTo(x + round(Coordinates[0]), y + round(Coordinates[1]))
             # time.sleep(0.001)
+
 
 # trims columns to read just bits of the columns instead of the whole screen, boosting efficiency
 def trimColums(coords):
@@ -45,10 +48,35 @@ def trimColums(coords):
     return coords
 
 
+# Debug method to read specific column to print each pixel value. To define Min/Max black identifiers
+def readColumn(column):
+    x1 = gameCoords[0] + gameBlocks[column]
+    y1 = gameCoords[1]
+    x2 = x1 + blockLength
+    y2 = gameCoords[3]
+    coordinates = [x1, y1, x2, y2]
+    coordinates = trimColums(coordinates)
+    screen = np.array(ImageGrab.grab(bbox=coordinates))
+    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
+    # 69
+    for y in reversed(range(len(screen))):
+        if isBlack(screen[y][0]):
+            print("value: " + str(screen[y][0]) + " Is Black")
+        else:
+            print("value: " + str(screen[y][0]))
+        moveMouseTo(x1, y + round(coordinates[1]))
+        time.sleep(0.1)
+
+
+# Method to identify if a block/pixel is black
+def isBlack(value):
+    return blackMinIdentifier <= value <= blackMaxIdentifier
+
+
 # Reads the column from bottom to top until it finds the first black pixel and clicks it
 def clickBlock(X, Column):
 
-    x1 = gameCoords[0] + gameColumns[Column][0]
+    x1 = gameCoords[0] + gameBlocks[Column]
     y1 = gameCoords[1]
     x2 = x1 + blockLength
     y2 = gameCoords[3]
@@ -60,7 +88,7 @@ def clickBlock(X, Column):
     # cv2.imwrite("testImages/column" + str(X) + ".jpg", screen)
 
     for y in reversed(range(len(screen))):
-        if screen[y][0] < blackIdentifier:
+        if isBlack(screen[y][0]):
             releaseClick()
             holdClickV2()
             # time.sleep(1)
@@ -68,15 +96,27 @@ def clickBlock(X, Column):
         moveMouseTo(X, y + round(coordinates[1]))
         # time.sleep(0.1)
 
+
+# Since we already now where's the black pixel, move the mouse to that location and click it
+def clickBlockV2(X):
+    moveMouseTo(X, heightOffset)
+    releaseClick()
+    holdClickV2()
+
+
 # Method that verifies if we should click the block and if so, it triggers the click method
 def shouldClick(Screen, X, Column, counter):
     print("checkscreen")
+    global startCounter
     for i in range(lineHeight):
         print("value:" + str(Screen[i][X]))
-        if Screen[i][X] < blackIdentifier:
+        if isBlack(Screen[i][X]):
             if counter == 0:
+                startCounter += 1
+                # Game reads and find the first black block to click before pressing start
                 pressStart()
-            clickBlock(X + gameCoords[0], Column)
+            # clickBlock(X + gameCoords[0], Column)
+            clickBlockV2(X + gameCoords[0])
             # moveMouseTo(X + gameCoords[0], lineCoords[1])
             # time.sleep(0.001)
             return True
@@ -84,41 +124,38 @@ def shouldClick(Screen, X, Column, counter):
     # time.sleep(0.001)
     return False
 
-# Method to gradually increase the height in which we are looking for black pixels 
-def increaseHeightOffset():
-    global heightOffset
-    global lineCoords
-    heightOffsetLimit = gameCoords[3]
-    print("heightOffsetLimit: " + str(heightOffsetLimit))
-    if heightOffset < heightOffsetLimit:
-        heightOffset += 1
-        lineCoords = [gameCoords[0], gameCoords[3] - heightOffset - lineHeight, gameCoords[2],
-                      (gameCoords[3] - heightOffset)]
-        print("heightOffset:" + str(heightOffset))
+
+# Method to define what to do when it shouldn't click a block
+def dontClick(i, counter):
+    print("block " + str(i) + " shouldClick: FALSE")
 
 
 # Method that reads the line with it's corresponding coordinates
 def readLine(counter):
+
+    # If the game reads the first line and it doesn't finds a black block in the line coordinates it presses start
+    if counter == 1 and startCounter == 0:
+        pressStart()
 
     screen = np.array(ImageGrab.grab(bbox=lineCoords))
     screen = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
 
     global lastBlockClicked
 
-    print("===================================ITERATION:" + str(counter) +  "===================================")
+    print("===================================ITERATION:" + str(counter) + "===================================")
     for i in range(len(gameBlocks)):
         if lastBlockClicked != i:
             if shouldClick(screen, gameBlocks[i], i, counter):
                 lastBlockClicked = i
                 print("block " + str(i) + " shouldClick: TRUE")
+                return False
             else:
-                # increaseHeightOffset()
-                print("block " + str(i) + " shouldClick: FALSE")
+                dontClick(i, counter)
         else:
-            # increaseHeightOffset()
-            print("block " + str(i) + " shouldClick: FALSE")
+            dontClick(i, counter)
 
     return False
+
 
 # Kill switch to end the program
 def isKillSwitch():
@@ -126,13 +163,16 @@ def isKillSwitch():
         print('*****************************************KILL SWITCH*****************************************')
         return True
 
+
 # Method that presses the start button
 def pressStart():
     mousePos = queryMousePosition()
     click(mousePos.get("x"), mousePos.get("y"))
-    # time.sleep(0.1)
+    time.sleep(0.2)
 
-def Start():
+
+# Start the process
+def start():
 
     start = time.time()
     time.clock()
@@ -141,7 +181,7 @@ def Start():
     stopProgram = False
     counter = 0
 
-    while elapsed < 40:
+    while elapsed < 10000:
 
         if isKillSwitch():
             break
@@ -156,16 +196,19 @@ def Start():
         # print("loop cycle time: %f, seconds count: %02d" % (time.clock(), elapsed))
 
 
-# Black value identifier when searching for black pixels
-blackIdentifier = 45
+# Max Black value identifier when searching for black pixels
+blackMaxIdentifier = 115
+
+# Min Black value identifier when searching for black pixels
+blackMinIdentifier = 18
 
 # Height offset in which we will read black pixels
 heightOffset = 500
 
 # Number of pixels in height we will read to search for black pixels
-lineHeight = 20
+lineHeight = 1
 
-# Coordinates used for OpenCV to analyze screen
+# Coordinates used for OpenCV to analyze game screen
 gameCoords = [663, 42, 1260, 1025]
 
 # Coordinates of the line we're gonna search black pixels in
@@ -200,5 +243,8 @@ print(gameBlocks)
 # Variable to optimize search times by skipping the columns if it has been already read
 lastBlockClicked = -1
 
-Start()
-# showScreen()
+# Variable to count each line read
+startCounter = 0
+
+start()
+# readColumn(1)
