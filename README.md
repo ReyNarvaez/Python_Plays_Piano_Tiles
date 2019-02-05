@@ -20,7 +20,7 @@ Python App that Plays Piano Tiles
 
 ## Usage
 
-* Open tha game.
+* Open tha game(full screen).
 * Choose a song.
 * Hover mouse on top of the start button.
 * Run the project.

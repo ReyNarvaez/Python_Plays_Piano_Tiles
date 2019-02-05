@@ -159,7 +159,7 @@ def readLine(counter):
 
 # Kill switch to end the program
 def isKillSwitch():
-    if keyboard.is_pressed('k'):  # if key 'esc' is pressed
+    if keyboard.is_pressed('k'):  # if key 'k' is pressed
         print('*****************************************KILL SWITCH*****************************************')
         return True
 
@@ -169,6 +169,55 @@ def pressStart():
     mousePos = queryMousePosition()
     click(mousePos.get("x"), mousePos.get("y"))
     time.sleep(0.2)
+
+# Method to get the game coordinates via user clicks
+def getGameCoordinates():
+
+    image = cv2.imread("test.jpg")
+
+    if image is None:
+        cv2.imwrite("fullScreen.jpg", np.array(ImageGrab.grab()))
+        image = cv2.imread("fullScreen.jpg")
+        clone = image.copy()
+        cv2.namedWindow("image")
+        cv2.setMouseCallback("image", recordCoordinates)
+
+        while True:
+            # display the image and wait for a keypress
+            cv2.imshow("image", image)
+            key = cv2.waitKey(1) & 0xFF
+
+            if gameCoordsRecorded:
+                break
+
+        # close all open windows
+        cv2.destroyAllWindows()
+
+coords = []
+image = None
+gameCoordsRecorded = False
+
+# Method to record coordinates on click
+def recordCoordinates(event, x, y, flags, param):
+    # grab references to the global variables
+    global coords
+    global image
+
+    # if the left mouse button was clicked, record the starting (x, y) coordinates
+    if event == cv2.EVENT_LBUTTONDOWN:
+        coords.append(x)
+        coords.append(y)
+
+    # check to see if the left mouse button was released
+    elif event == cv2.EVENT_LBUTTONUP:
+        # record the ending (x, y) coordinates
+        coords.append(x)
+        coords.append(y)
+
+        screen = np.array(ImageGrab.grab(bbox=coords))
+        cv2.imshow('screen', screen)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
 
 
 # Start the process
@@ -213,7 +262,10 @@ gameCoords = [663, 42, 1260, 1025]
 
 # Coordinates of the line we're gonna search black pixels in
 lineCoords = [gameCoords[0], gameCoords[3] - heightOffset - lineHeight, gameCoords[2], (gameCoords[3] - heightOffset)]
+print("Game Coordinates:")
 print(gameCoords)
+
+print("Line Coordinates")
 print(lineCoords)
 gameLength = gameCoords[2] - gameCoords[0]
 gameHeight = gameCoords[3] - gameCoords[1]
@@ -229,6 +281,7 @@ column3 = [column2[1], blockLength*3]
 column4 = [column3[1], blockLength*4]
 
 gameColumns = [column1, column2, column3, column4]
+print("Block Coordinates")
 print(gameColumns)
 
 # X coordinates for each block location
@@ -238,6 +291,7 @@ block3 = block2 + blockLength
 block4 = block3 + blockLength
 
 gameBlocks = [block1, block2, block3, block4]
+print("Blocks X Coordinates")
 print(gameBlocks)
 
 # Variable to optimize search times by skipping the columns if it has been already read
@@ -246,5 +300,6 @@ lastBlockClicked = -1
 # Variable to count each line read
 startCounter = 0
 
-start()
+# start()
+# getGameCoordinates()
 # readColumn(1)
