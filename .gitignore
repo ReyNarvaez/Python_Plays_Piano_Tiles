@@ -105,3 +105,6 @@ venv.bak/
 
 # images
 *.jpg
+
+# personal coordinates file
+coordinates.txt

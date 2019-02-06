@@ -22,10 +22,12 @@ Python App that Plays Piano Tiles
 
 ## Usage
 
-* Open tha game(full screen).
-* Open the autoClick.py file.
-* Change the game coordinates to match your screen.
+* Open the game(full screen).
 * Choose a song.
+* Open the coordinatesHandler.py file
+    * Run the program and follow the instructions in the console
+* Open the autoClick.py file.
 * Hover mouse on top of the start button.
 * Run the project.
 * Enjoy the music.
+* Press the **k** key at any moment to stop the program

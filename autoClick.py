@@ -2,6 +2,7 @@ import numpy as np
 from PIL import ImageGrab
 import cv2
 from directKeys import click, holdClick, holdClickV2, releaseClick, queryMousePosition, W, moveMouseTo
+from coordinatesHandler import getStoredCoordinates
 import time
 import keyboard
 
@@ -58,7 +59,7 @@ def readColumn(column):
     coordinates = trimColums(coordinates)
     screen = np.array(ImageGrab.grab(bbox=coordinates))
     screen = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
-    # 69
+
     for y in reversed(range(len(screen))):
         if isBlack(screen[y][0]):
             print("value: " + str(screen[y][0]) + " Is Black")
@@ -71,30 +72,6 @@ def readColumn(column):
 # Method to identify if a block/pixel is black
 def isBlack(value):
     return blackMinIdentifier <= value <= blackMaxIdentifier
-
-
-# Reads the column from bottom to top until it finds the first black pixel and clicks it
-def clickBlock(X, Column):
-
-    x1 = gameCoords[0] + gameBlocks[Column]
-    y1 = gameCoords[1]
-    x2 = x1 + blockLength
-    y2 = gameCoords[3]
-    coordinates = [x1, y1, x2, y2]
-    coordinates = trimColums(coordinates)
-    screen = np.array(ImageGrab.grab(bbox=coordinates))
-    screen = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
-
-    # cv2.imwrite("testImages/column" + str(X) + ".jpg", screen)
-
-    for y in reversed(range(len(screen))):
-        if isBlack(screen[y][0]):
-            releaseClick()
-            holdClickV2()
-            # time.sleep(1)
-            return
-        moveMouseTo(X, y + round(coordinates[1]))
-        # time.sleep(0.1)
 
 
 # Since we already now where's the black pixel, move the mouse to that location and click it
@@ -115,7 +92,6 @@ def shouldClick(Screen, X, Column, counter):
                 startCounter += 1
                 # Game reads and find the first black block to click before pressing start
                 pressStart()
-            # clickBlock(X + gameCoords[0], Column)
             clickBlockV2(X + gameCoords[0])
             # moveMouseTo(X + gameCoords[0], lineCoords[1])
             # time.sleep(0.001)
@@ -136,6 +112,8 @@ def readLine(counter):
     # If the game reads the first line and it doesn't finds a black block in the line coordinates it presses start
     if counter == 1 and startCounter == 0:
         pressStart()
+
+    # TODO: Implement stopProgram condition
 
     screen = np.array(ImageGrab.grab(bbox=lineCoords))
     screen = cv2.cvtColor(screen, cv2.COLOR_BGR2GRAY)
@@ -170,55 +148,6 @@ def pressStart():
     click(mousePos.get("x"), mousePos.get("y"))
     time.sleep(0.2)
 
-# Method to get the game coordinates via user clicks
-def getGameCoordinates():
-
-    image = cv2.imread("test.jpg")
-
-    if image is None:
-        cv2.imwrite("fullScreen.jpg", np.array(ImageGrab.grab()))
-        image = cv2.imread("fullScreen.jpg")
-        clone = image.copy()
-        cv2.namedWindow("image")
-        cv2.setMouseCallback("image", recordCoordinates)
-
-        while True:
-            # display the image and wait for a keypress
-            cv2.imshow("image", image)
-            key = cv2.waitKey(1) & 0xFF
-
-            if gameCoordsRecorded:
-                break
-
-        # close all open windows
-        cv2.destroyAllWindows()
-
-coords = []
-image = None
-gameCoordsRecorded = False
-
-# Method to record coordinates on click
-def recordCoordinates(event, x, y, flags, param):
-    # grab references to the global variables
-    global coords
-    global image
-
-    # if the left mouse button was clicked, record the starting (x, y) coordinates
-    if event == cv2.EVENT_LBUTTONDOWN:
-        coords.append(x)
-        coords.append(y)
-
-    # check to see if the left mouse button was released
-    elif event == cv2.EVENT_LBUTTONUP:
-        # record the ending (x, y) coordinates
-        coords.append(x)
-        coords.append(y)
-
-        screen = np.array(ImageGrab.grab(bbox=coords))
-        cv2.imshow('screen', screen)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-
 
 # Start the process
 def start():
@@ -230,7 +159,7 @@ def start():
     stopProgram = False
     counter = 0
 
-    while elapsed < 10000:
+    while True:
 
         if isKillSwitch():
             break
@@ -258,7 +187,7 @@ heightOffset = 500
 lineHeight = 1
 
 # Coordinates used for OpenCV to analyze game screen
-gameCoords = [663, 42, 1260, 1025]
+gameCoords = getStoredCoordinates()
 
 # Coordinates of the line we're gonna search black pixels in
 lineCoords = [gameCoords[0], gameCoords[3] - heightOffset - lineHeight, gameCoords[2], (gameCoords[3] - heightOffset)]
@@ -300,6 +229,5 @@ lastBlockClicked = -1
 # Variable to count each line read
 startCounter = 0
 
-# start()
-# getGameCoordinates()
+start()
 # readColumn(1)
