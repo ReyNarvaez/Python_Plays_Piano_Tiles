@@ -30,4 +30,4 @@ Python App that Plays Piano Tiles
 * Hover mouse on top of the start button.
 * Run the project.
 * Enjoy the music.
-* Press the **k** key at any moment to stop the program
+* Press the **"k"** key at any moment to stop the program
