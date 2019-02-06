@@ -11,7 +11,7 @@ Python App that Plays Piano Tiles
 
 ## Installation
 
-* Clone the repository.
+* Clone or download the repository.
 * Install the requirements: 
     ```pip install -r requirements.txt```
 * Install **Piano Tiles 2018: Classic Songs** from the windows store
